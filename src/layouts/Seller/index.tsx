@@ -1,19 +1,22 @@
 // Dependencies
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link } from "react-router-dom";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 // Routes
 import { sellerRoutes } from "../../router/routes";
 
 // Interfaces
-import { IState } from "../../store/reducers";
+import { IState } from "../../interfaces";
 
 // Images
 import AvatarImg from "../../assets/img/placeholders/avatars/avatar.jpg";
 
 // Actions
-import { setMenuStatus } from "../../store/actions";
+import {setMenuStatus, setUser} from "../../store/actions";
+
+// Services
+import { Storage } from "../../services";
 
 // Styles
 import "./style.scss";
@@ -23,7 +26,7 @@ const SellerLayout = ({ children }) => {
     // Get dispatch from hook
     const dispatch = useDispatch();
     // Get showMenu from hook
-    const showMenu = useSelector((state: IState) => state.showMenu);
+    const showMenu = useSelector((state: IState) => state.showMenu, shallowEqual);
 
     // @ts-ignore
     window.onresize = (e => {
@@ -33,6 +36,19 @@ const SellerLayout = ({ children }) => {
             dispatch(setMenuStatus(false));
         }
     });
+
+    // Logout handler
+    const handleLogout = () => {
+        // Remove token from local stroage
+        Storage.removeItem(process.env.ACCESS_TOKEN_KEY || "access_token");
+
+        // Dispatch set user action
+        dispatch(setUser({
+            role: "buyer",
+            token: false,
+            deposit: 0
+        }));
+    };
 
     // Return seller layout
     return (
@@ -91,14 +107,14 @@ const SellerLayout = ({ children }) => {
                                 <ul className="dropdown-menu dropdown-custom dropdown-menu-right">
                                     <li className="dropdown-header text-center">Account</li>
                                     <li>
-                                        <a href="page_ready_user_profile.html">
+                                        <span>
                                             <i className="fa fa-user fa-fw pull-right" />
                                             Profile
-                                        </a>
-                                        <a href="#modal-user-settings" data-toggle="modal">
+                                        </span>
+                                        <span onClick={ handleLogout }>
                                             <i className="fa fa-ban fa-fw pull-right" />
                                             Logout
-                                        </a>
+                                        </span>
                                     </li>
                                 </ul>
                             </li>

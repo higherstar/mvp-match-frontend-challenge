@@ -68,7 +68,7 @@ export const buyerRoutes = [
 
 export const sellerRoutes = [
   {
-    path: "/products",
+    path: "/",
     name: "Products",
     icon: "shopping_cart",
     component: SellerProductsPage

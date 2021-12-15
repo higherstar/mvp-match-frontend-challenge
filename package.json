@@ -27,6 +27,7 @@
     "bignumber.js": "^9.0.0",
     "color": "^3.1.2",
     "file-saver": "^2.0.2",
+    "formik": "2.1.4",
     "history": "^4.9.0",
     "moment-timezone": "^0.5.27",
     "react": "^16.9.0",
@@ -39,7 +40,8 @@
     "store2": "^2.7.1",
     "styled-components": "^4.3.2",
     "axios": "^0.19.0",
-    "node-sass": "^4.13.0"
+    "node-sass": "^4.13.0",
+    "yup": "0.29.0"
   },
   "devDependencies": {
     "@types/bignumber.js": "^5.0.0",

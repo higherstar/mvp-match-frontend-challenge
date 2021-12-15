@@ -2532,6 +2532,21 @@ a.list-group-item.active > .badge {
     background-color: #1bbae1;
 }
 
+.nav-pills > li.active > span,
+.nav-pills > li.active > span:hover,
+.nav-pills > li.active > span:focus,
+.dropdown-menu > li > span:hover,
+.dropdown-menu > li > span:focus,
+.dropdown-menu > .active > span,
+.dropdown-menu > .active > span:hover,
+.dropdown-menu > .active > span:focus,
+.nav .open > span,
+.nav .open > span:hover,
+.nav .open > span:focus {
+    color: #fff;
+    background-color: #1bbae1;
+}
+
 .nav > li i {
     font-size: 14px;
 }
@@ -2610,6 +2625,12 @@ a.list-group-item.active > .badge {
     padding: 6px 10px;
 }
 
+.dropdown-menu > li > span {
+    padding: 6px 10px;
+    color: #333;
+    cursor: pointer;
+}
+
 .dropdown-menu i {
     opacity: 0.2;
     filter: alpha(opacity=20);
@@ -2617,6 +2638,11 @@ a.list-group-item.active > .badge {
 }
 
 .dropdown-menu a:hover i {
+    opacity: 0.5;
+    filter: alpha(opacity=50);
+}
+
+.dropdown-menu span:hover i {
     opacity: 0.5;
     filter: alpha(opacity=50);
 }
@@ -2650,8 +2676,9 @@ li.dropdown-header {
     font-size: 12px;
 }
 
-.dropdown-menu.dropdown-custom > li > a {
+.dropdown-menu.dropdown-custom > li > span {
     border-radius: 3px;
+    display: block;
 }
 
 .dropdown-submenu {

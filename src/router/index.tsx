@@ -1,12 +1,16 @@
 // Dependencies
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { shallowEqual, useSelector } from "react-redux";
+import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 
 // Layouts
 import { AuthLayout, BuyerLayout, SellerLayout } from "../layouts";
 
 // Routes
 import { authRoutes, buyerRoutes, sellerRoutes } from "./routes";
+
+// Interfaces
+import { IState, IUser } from "../interfaces";
 
 // Child routes
 const childRoutes = (Layout, routes) =>
@@ -41,15 +45,39 @@ const childRoutes = (Layout, routes) =>
     );
 
 // Create Routes
-const Router = () => (
-    <BrowserRouter>
-        <Switch>
-            {childRoutes(AuthLayout, authRoutes)}
-            {childRoutes(BuyerLayout, buyerRoutes)}
-            {/*{childRoutes(SellerLayout, sellerRoutes)}*/}
-        </Switch>
-    </BrowserRouter>
-);
+const Router = () => {
+    // Get user from store
+    const user: IUser = useSelector((state: IState) => state.user, shallowEqual);
+
+    console.log(user);
+
+    // Return router
+    return (
+        <BrowserRouter>
+            <Switch>
+                {
+                    !user.token
+                        ? (
+                            <>
+                                { childRoutes(AuthLayout, authRoutes) }
+                                <Redirect to="/auth/sign-in" />
+                            </>
+                        )
+                        : (
+                            <>
+                                {
+                                    user.role === "seller"
+                                        ? childRoutes(SellerLayout, sellerRoutes)
+                                        : childRoutes(BuyerLayout, buyerRoutes)
+                                }
+                                <Redirect to="/" />
+                            </>
+                        )
+                }
+            </Switch>
+        </BrowserRouter>
+    );
+};
 
 // Export routes
 export default Router;

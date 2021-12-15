@@ -1,13 +1,13 @@
 // Dependencies
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 
 // Action
 import { setNavStatus } from "../../store/actions";
 
 // Interface
-import { IState } from "../../store/reducers";
+import { IState } from "../../interfaces";
 
 // Routes
 import { buyerRoutes } from "../../router/routes";
@@ -22,7 +22,7 @@ const BuyerLayout = ({ children }) => {
     // Get dispatch from hook
     const dispatch = useDispatch();
     // Get nav status from hook
-    const showNav = useSelector((state: IState) => state.showNav);
+    const showNav = useSelector((state: IState) => state.showNav, shallowEqual);
 
     const [isScroll, setIsScroll] = useState(false);
 

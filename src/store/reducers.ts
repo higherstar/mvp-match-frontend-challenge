@@ -1,15 +1,18 @@
 // Dependencies
 import * as types from "./constants";
 
-export interface IState {
-    showMenu: boolean;
-    showNav: boolean;
-}
+// Interfaces
+import { IState } from "../interfaces";
 
 // Initial state
 const initialState: IState = {
     showMenu: true,
     showNav: false,
+    user: {
+        role: "buyer",
+        deposit: 0,
+        token: false,
+    }
 };
 
 // Create reducer
@@ -26,6 +29,12 @@ const reducer = (state = initialState, actions) => {
             return {
                 ...state,
                 showNav: actions.payload
+            };
+
+        case types.SET_USER:
+            return {
+                ...state,
+                user: actions.payload
             };
 
         default:
