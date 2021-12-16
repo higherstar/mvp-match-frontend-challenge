@@ -27,7 +27,7 @@ const App = () => {
 
     // Get user from token
     if (token) {
-        AuthApi.me(token)
+        AuthApi.me()
             .then(res => {
                 if (res.data.accessToken) {
                     // Store token to local storage
@@ -35,7 +35,7 @@ const App = () => {
 
                     if (res.data.user) {
                         // Get user from res
-                        const user = res.data.user as Pick<IUser, "role" | "deposit">;
+                        const user = res.data.user as Pick<IUser, "role" | "deposit" | "email">;
 
                         // Dispatch set user action
                         dispatch(setUser({

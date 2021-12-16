@@ -14,7 +14,11 @@ export class AuthApi {
         return Http.post("/auth/register", registerData);
     }
 
-    static me(token: string) {
-        return Http.post("/auth/me", { token });
+    static me() {
+        return Http.get("/auth/me");
+    }
+
+    static updateProfile(updateProfileData: ILoginData) {
+        return Http.post("/auth/update-profile", updateProfileData);
     }
 }

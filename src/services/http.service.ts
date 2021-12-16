@@ -8,7 +8,7 @@ import { Storage } from "./storage.service";
 const http = axios.create({ baseURL: `${process.env.API_SERVER || "http://localhost:3100/api/v1"}` });
 
 // Create request
-const request = (method: Method, url: string, options: AxiosRequestConfig): Promise<AxiosResponse> => {
+const request = (method: Method, url: string, options: AxiosRequestConfig): Promise<any> => {
     // @ts-ignore
     const accessToken = Storage.getItem(process.env.ACCESS_TOKEN_KEY || "access_token");
 

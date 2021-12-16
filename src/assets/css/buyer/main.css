@@ -120,7 +120,8 @@ header nav {
     right: 0;
 }
 
-.site-nav a {
+.site-nav a, .site-nav span {
+    cursor: pointer;
     display: block;
     font-size: 13px;
     color: #ffffff;
@@ -133,7 +134,7 @@ header nav {
     text-transform: uppercase;
 }
 
-.site-nav a:hover {
+.site-nav a:hover, .site-nav span:hover {
     color: #333333;
     background: #ffffff;
     text-decoration: none;

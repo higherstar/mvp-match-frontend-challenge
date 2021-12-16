@@ -49,8 +49,6 @@ const Router = () => {
     // Get user from store
     const user: IUser = useSelector((state: IState) => state.user, shallowEqual);
 
-    console.log(user);
-
     // Return router
     return (
         <BrowserRouter>

@@ -64,7 +64,7 @@ const SignIn = () => {
                                 Storage.setItem(process.env.ACCESS_TOKEN_KEY || "access_token", res.data.accessToken);
 
                                 // Get user from res
-                                const user = res.data.user as Pick<IUser, "role" | "deposit">;
+                                const user = res.data.user as Pick<IUser, "role" | "deposit" | "email">;
 
                                 // Dispatch set user action
                                 dispatch(setUser({

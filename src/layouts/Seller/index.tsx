@@ -1,7 +1,10 @@
 // Dependencies
-import React from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { NavLink, Link } from "react-router-dom";
+
+// Components
+import { SettingsModal } from "../../components";
 
 // Routes
 import { sellerRoutes } from "../../router/routes";
@@ -9,23 +12,26 @@ import { sellerRoutes } from "../../router/routes";
 // Interfaces
 import { IState } from "../../interfaces";
 
-// Images
-import AvatarImg from "../../assets/img/placeholders/avatars/avatar.jpg";
-
 // Actions
-import {setMenuStatus, setUser} from "../../store/actions";
+import { setMenuStatus, setUser } from "../../store/actions";
 
 // Services
 import { Storage } from "../../services";
 
+// Images
+import AvatarImg from "../../assets/img/placeholders/avatars/avatar.jpg";
+
 // Styles
 import "./style.scss";
+import HeaderImg from "../../assets/img/placeholders/headers/dashboard_header.jpg";
 
 // Create seller layout
 const SellerLayout = ({ children }) => {
+    // States
+    const [showModal, setShowModal] = useState<boolean>(false);
     // Get dispatch from hook
     const dispatch = useDispatch();
-    // Get showMenu from hook
+    // Get showMenu from store
     const showMenu = useSelector((state: IState) => state.showMenu, shallowEqual);
 
     // @ts-ignore
@@ -39,14 +45,15 @@ const SellerLayout = ({ children }) => {
 
     // Logout handler
     const handleLogout = () => {
-        // Remove token from local stroage
+        // Remove token from local storage
         Storage.removeItem(process.env.ACCESS_TOKEN_KEY || "access_token");
 
         // Dispatch set user action
         dispatch(setUser({
             role: "buyer",
             token: false,
-            deposit: 0
+            deposit: 0,
+            email: ""
         }));
     };
 
@@ -57,7 +64,7 @@ const SellerLayout = ({ children }) => {
                 <div id="sidebar">
                     <div id="sidebar-scroll">
                         <div className="sidebar-content">
-                            <Link to="/projects" className="sidebar-brand">
+                            <Link to="/" className="sidebar-brand">
                                 <i className="gi gi-flash" />
                                 <span className="sidebar-nav-mini-hide"><strong>MVP</strong> Match</span>
                             </Link>
@@ -66,10 +73,10 @@ const SellerLayout = ({ children }) => {
                                 <div className="sidebar-user-avatar">
                                     <img src={ AvatarImg } alt="avatar" />
                                 </div>
-                                <div className="sidebar-user-name">John Doe</div>
+                                <div className="sidebar-user-name"><strong>Seller</strong></div>
                                 <div className="sidebar-user-links">
-                                    <a href="#modal-user-settings" data-toggle="modal" className="enable-tooltip" data-placement="bottom" title="Settings"><i className="gi gi-cogwheel" /></a>
-                                    <a href="login.html" data-toggle="tooltip" data-placement="bottom" title="Logout"><i className="gi gi-exit" /></a>
+                                    <span><i className="gi gi-cogwheel" /></span>
+                                    <span onClick={ handleLogout }><i className="gi gi-exit" /></span>
                                 </div>
                             </div>
 
@@ -107,7 +114,7 @@ const SellerLayout = ({ children }) => {
                                 <ul className="dropdown-menu dropdown-custom dropdown-menu-right">
                                     <li className="dropdown-header text-center">Account</li>
                                     <li>
-                                        <span>
+                                        <span onClick={() => setShowModal(true)}>
                                             <i className="fa fa-user fa-fw pull-right" />
                                             Profile
                                         </span>
@@ -120,9 +127,12 @@ const SellerLayout = ({ children }) => {
                             </li>
                         </ul>
                     </header>
-                    { children }
+                    <div id="page-content">
+                        { children }
+                    </div>
                 </div>
             </div>
+            <SettingsModal open={ showModal } setOpen={ setShowModal } />
         </div>
     );
 };

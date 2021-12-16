@@ -12,6 +12,7 @@ const initialState: IState = {
         role: "buyer",
         deposit: 0,
         token: false,
+        email: ""
     }
 };
 

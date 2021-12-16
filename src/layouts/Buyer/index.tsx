@@ -1,10 +1,10 @@
 // Dependencies
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { Link, NavLink } from "react-router-dom";
 
 // Action
-import { setNavStatus } from "../../store/actions";
+import { setNavStatus, setUser } from "../../store/actions";
 
 // Interface
 import { IState } from "../../interfaces";
@@ -12,8 +12,12 @@ import { IState } from "../../interfaces";
 // Routes
 import { buyerRoutes } from "../../router/routes";
 
+// Services
+import { Storage } from "../../services";
+
 // Styles
 import "./style.scss";
+import {SettingsModal} from "../../components";
 
 // Create buyer layout
 const BuyerLayout = ({ children }) => {
@@ -24,7 +28,9 @@ const BuyerLayout = ({ children }) => {
     // Get nav status from hook
     const showNav = useSelector((state: IState) => state.showNav, shallowEqual);
 
-    const [isScroll, setIsScroll] = useState(false);
+    // States
+    const [isScroll, setIsScroll] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
 
     useEffect(() => {
         window.onscroll = (e) => {
@@ -36,6 +42,20 @@ const BuyerLayout = ({ children }) => {
             }
         };
     }, []);
+
+    // Logout handler
+    const handleLogout = () => {
+        // Remove token from local storage
+        Storage.removeItem(process.env.ACCESS_TOKEN_KEY || "access_token");
+
+        // Dispatch set user action
+        dispatch(setUser({
+            role: "buyer",
+            token: false,
+            deposit: 0,
+            email: ""
+        }));
+    };
 
     // Return buyer layout
     return (
@@ -52,19 +72,39 @@ const BuyerLayout = ({ children }) => {
                         </span>
 
                         <ul className={`site-nav ${ showNav ? "site-nav-visible" : null }`} onMouseLeave={() => dispatch(setNavStatus(false))}>
-                            <li>
-                                <Link to="/products">Products</Link>
+                            <li className="visible-xs visible-sm">
+                                <span className="site-menu-toggle text-center" onClick={() => dispatch(setNavStatus(false))}>
+                                    <i className="fa fa-times" />
+                                </span>
                             </li>
-                            <li>
-                                <Link to="/shopping-cart">Shopping cart</Link>
+                            {
+                                buyerRoutes.map(({ path, name, children }, index) => (
+                                    <li key={ index }>
+                                        <NavLink to={ path } exact={ !children }>{ name }</NavLink>
+                                    </li>
+                                ))
+                            }
+                            <li onClick={() => setShowModal(true)}>
+                                <span className="m-0 visible-md visible-lg">
+                                    <i className="gi gi-user" />
+                                </span>
+                                <span className="visible-xs visible-sm">
+                                    Profile
+                                </span>
                             </li>
-                            <li>
-                                <Link to="/deposit">Deposit</Link>
+                            <li onClick={ handleLogout }>
+                                <span className="m-0 visible-md visible-lg">
+                                    <i className="gi gi-power" />
+                                </span>
+                                <span className="visible-xs visible-sm">
+                                    Logout
+                                </span>
                             </li>
                         </ul>
                     </nav>
                 </div>
             </header>
+            <SettingsModal open={ showModal } setOpen={ setShowModal } />
             { children }
         </div>
     );

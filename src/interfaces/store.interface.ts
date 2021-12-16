@@ -5,6 +5,7 @@ export interface IUser {
     role: IRole;
     deposit: number;
     token: boolean;
+    email: string;
 }
 
 export interface IState {
