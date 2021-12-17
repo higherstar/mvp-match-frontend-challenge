@@ -360,6 +360,56 @@ header.navbar-inverse.navbar-fixed-bottom {
     vertical-align: top;
 }
 
+.nav.navbar-nav-custom > li > span {
+    display: block;
+    cursor: pointer;
+    min-width: 50px;
+    padding: 5px 7px;
+    line-height: 40px;
+    text-align: center;
+    color: #394263;
+    position: relative;
+}
+
+.nav.navbar-nav-custom > li > span .gi,
+.nav.navbar-nav-custom > li > span .hi,
+.nav.navbar-nav-custom > li > span .si,
+.nav.navbar-nav-custom > li > span .fi {
+    margin-top: -3px;
+}
+
+.nav.navbar-nav-custom > li > span .label-indicator {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 0;
+    font-weight: 600;
+}
+
+.navbar-fixed-bottom .nav.navbar-nav-custom > li > span .label-indicator {
+    top: auto;
+    bottom: 0;
+}
+
+.navbar-inverse .nav.navbar-nav-custom > li > span {
+    color: #ffffff;
+}
+
+.nav.navbar-nav-custom > li.open > span,
+.nav.navbar-nav-custom > li > span:hover,
+.nav.navbar-nav-custom > li > span:focus {
+    background-color: #1bbae1;
+    color: #ffffff;
+}
+
+.nav.navbar-nav-custom > li > span > img {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 20px;
+    vertical-align: top;
+}
+
 /* Header Search */
 .navbar-form {
     margin: 7px 0;
@@ -1711,6 +1761,10 @@ a[data-toggle="lightbox-image"]:hover img {
 #error-container {
     padding: 120px 20px;
     position: relative;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    height: 100vh;
 }
 
 #error-container .error-options {

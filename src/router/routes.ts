@@ -12,11 +12,15 @@ import {
   // Seller pages
   SellerProductsPage,
   SellerNewProductPage,
-  SellerProductEditPage,
+  SellerProductEditPage, NotFoundPage,
 } from "../pages";
 
 // Auth routes
 export const authRoutes = [
+  {
+    path: "/",
+    component: SignInPage
+  },
   {
     path: "/auth/sign-in",
     component: SignInPage
@@ -24,7 +28,7 @@ export const authRoutes = [
   {
     path: "/auth/sign-up",
     component: SignUpPage
-  }
+  },
 ];
 
 export const buyerRoutes = [
@@ -56,7 +60,7 @@ export const buyerRoutes = [
     path: "/deposit",
     name: "Deposit",
     component: BuyerDepositPage,
-  }
+  },
 ];
 
 export const sellerRoutes = [
@@ -70,13 +74,20 @@ export const sellerRoutes = [
         component: SellerProductsPage,
       },
       {
-        path: "/products/:id",
-        component: SellerProductEditPage
-      },
-      {
         path: "/products/create",
         component: SellerNewProductPage
+      },
+      {
+        path: "/products/edit/:id",
+        component: SellerProductEditPage
       }
     ]
+  },
+];
+
+export const commonRoutes = [
+  {
+    path: "*",
+    component: NotFoundPage
   },
 ];

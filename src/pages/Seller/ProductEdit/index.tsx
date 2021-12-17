@@ -1,8 +1,14 @@
 // Dependencies
 import React from "react";
+import { useParams } from "react-router";
 
 // Create product edit page
 const ProductEdit = () => {
+    // Get product id from location
+    const { id } = useParams();
+
+    console.log("id: ", id);
+
     return (
         <div className="row d-flex justify-content-center">
             <div className="col-lg-6">

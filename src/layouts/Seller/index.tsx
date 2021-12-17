@@ -99,15 +99,15 @@ const SellerLayout = ({ children }) => {
                     <header className="navbar navbar-default">
                         <ul className="nav navbar-nav-custom">
                             <li>
-                                <a href="javascript:void(0)" onClick={() => dispatch(setMenuStatus(!showMenu))}>
+                                <span onClick={() => dispatch(setMenuStatus(!showMenu))}>
                                     <i className="fa fa-bars fa-fw" />
-                                </a>
+                                </span>
                             </li>
                         </ul>
 
                         <ul className="nav navbar-nav-custom pull-right">
                             <li className="dropdown">
-                                <a href="javascript:void(0)" className="dropdown-toggle" data-toggle="dropdown">
+                                <a className="dropdown-toggle" data-toggle="dropdown">
                                     <img src={ AvatarImg } alt="avatar" />
                                     <i className="fa fa-angle-down" />
                                 </a>

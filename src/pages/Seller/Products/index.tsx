@@ -32,6 +32,9 @@ const Products = () => {
             </div>
             <div className="block full">
                 <div className="block-title">
+                    <div className="block-options pull-right">
+                        <Link to="/products/create" className="btn btn-sm btn-success"><i className="fa fa-plus" /> New</Link>
+                    </div>
                     <h2><i className="gi gi-shopping_cart mr-2" /> <strong>Products</strong></h2>
                 </div>
                 <div className="input-group push">
@@ -66,7 +69,7 @@ const Products = () => {
                                 </td>
                                 <td className="text-center">
                                     <div className="btn-group btn-group-xs">
-                                        <Link to={ `/products/${ id }` } data-toggle="tooltip" title="Edit"
+                                        <Link to={ `/products/edit/${ id }` } data-toggle="tooltip" title="Edit"
                                               className="btn btn-default"><i className="fa fa-pencil"></i></Link>
                                         <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"
                                            className="btn btn-xs btn-danger"><i className="fa fa-times"></i></a>

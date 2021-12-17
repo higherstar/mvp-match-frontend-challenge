@@ -7,10 +7,11 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { AuthLayout, BuyerLayout, SellerLayout } from "../layouts";
 
 // Routes
-import { authRoutes, buyerRoutes, sellerRoutes } from "./routes";
+import {authRoutes, buyerRoutes, commonRoutes, sellerRoutes} from "./routes";
 
 // Interfaces
 import { IState, IUser } from "../interfaces";
+import {NotFoundPage} from "../pages";
 
 // Child routes
 const childRoutes = (Layout, routes) =>
@@ -55,23 +56,12 @@ const Router = () => {
             <Switch>
                 {
                     !user.token
-                        ? (
-                            <>
-                                { childRoutes(AuthLayout, authRoutes) }
-                                <Redirect to="/auth/sign-in" />
-                            </>
-                        )
-                        : (
-                            <>
-                                {
-                                    user.role === "seller"
-                                        ? childRoutes(SellerLayout, sellerRoutes)
-                                        : childRoutes(BuyerLayout, buyerRoutes)
-                                }
-                                <Redirect to="/" />
-                            </>
-                        )
+                        ? childRoutes(AuthLayout, authRoutes)
+                        : user.role === "seller"
+                            ? childRoutes(SellerLayout, sellerRoutes)
+                            : childRoutes(BuyerLayout, buyerRoutes)
                 }
+                { childRoutes(AuthLayout, commonRoutes) }
             </Switch>
         </BrowserRouter>
     );

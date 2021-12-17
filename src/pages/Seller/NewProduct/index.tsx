@@ -16,7 +16,7 @@ const NewProduct = () => {
                             <label className="col-md-3 control-label" htmlFor="product-name">Name</label>
                             <div className="col-md-9">
                                 <div className="input-group">
-                                    <div className="input-group-addon"><i className="gi gi-cargo" /></div>
+                                    <div className="input-group-addon"><i className="gi gi-font" /></div>
                                     <input type="text" id="product-name" name="product-name" className="form-control"
                                            placeholder="Enter product name.." />
                                 </div>
@@ -35,7 +35,7 @@ const NewProduct = () => {
                             <label className="col-md-3 control-label" htmlFor="product-price">Amount</label>
                             <div className="col-md-9">
                                 <div className="input-group">
-                                    <div className="input-group-addon"><i className="gi gi-font" /></div>
+                                    <div className="input-group-addon"><i className="gi gi-cargo" /></div>
                                     <input type="number" id="product-price" name="product-price" className="form-control" placeholder="0" />
                                 </div>
                             </div>
