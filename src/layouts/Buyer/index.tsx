@@ -2,6 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { Link, NavLink } from "react-router-dom";
+import { useHistory } from "react-router";
+
+// Components
+import { SettingsModal } from "../../components";
 
 // Action
 import { setNavStatus, setUser } from "../../store/actions";
@@ -17,7 +21,6 @@ import { Storage } from "../../services";
 
 // Styles
 import "./style.scss";
-import {SettingsModal} from "../../components";
 
 // Create buyer layout
 const BuyerLayout = ({ children }) => {
@@ -27,6 +30,8 @@ const BuyerLayout = ({ children }) => {
     const dispatch = useDispatch();
     // Get nav status from hook
     const showNav = useSelector((state: IState) => state.showNav, shallowEqual);
+    // Get history from hook
+    const history = useHistory();
 
     // States
     const [isScroll, setIsScroll] = useState<boolean>(false);
@@ -55,6 +60,8 @@ const BuyerLayout = ({ children }) => {
             deposit: 0,
             email: ""
         }));
+
+        history.push("/");
     };
 
     // Return buyer layout
