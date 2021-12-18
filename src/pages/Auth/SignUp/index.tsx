@@ -169,7 +169,7 @@ const SignUp = () => {
                                             <i className="gi gi-user" />
                                         </span>
                                         <select name="role" className="form-control input-lg" value={ values.role } onChange={ handleChange }>
-                                            <option value="0">Please select</option>
+                                            <option value="" disabled>Please select</option>
                                             <option value="seller">Seller</option>
                                             <option value="buyer">Buyer</option>
                                         </select>

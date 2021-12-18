@@ -10,3 +10,17 @@ export interface ILoginData {
 export interface IRegisterData extends ILoginData {
     role: IRole;
 }
+
+export interface IProduct {
+    productName: string;
+    cost: number;
+    amountAvailable: number;
+}
+
+export interface IQueryParams {
+    search?: string;
+    page?: number;
+    limit?: number;
+    order?: "DESC" | "ASC";
+    sortBy?: string;
+}

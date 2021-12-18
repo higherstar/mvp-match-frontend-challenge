@@ -23,12 +23,12 @@ import AvatarImg from "../../assets/img/placeholders/avatars/avatar.jpg";
 
 // Styles
 import "./style.scss";
-import HeaderImg from "../../assets/img/placeholders/headers/dashboard_header.jpg";
 
 // Create seller layout
 const SellerLayout = ({ children }) => {
     // States
     const [showModal, setShowModal] = useState<boolean>(false);
+    const [showDropdown, setShowDropdown] = useState<boolean>(false);
     // Get dispatch from hook
     const dispatch = useDispatch();
     // Get showMenu from store
@@ -57,6 +57,12 @@ const SellerLayout = ({ children }) => {
         }));
     };
 
+    // Profile click handler
+    const handleProfileClick = () => {
+        setShowDropdown(false);
+        setShowModal(true);
+    };
+
     // Return seller layout
     return (
         <div id="page-wrapper">
@@ -75,7 +81,7 @@ const SellerLayout = ({ children }) => {
                                 </div>
                                 <div className="sidebar-user-name"><strong>Seller</strong></div>
                                 <div className="sidebar-user-links">
-                                    <span><i className="gi gi-cogwheel" /></span>
+                                    <span onClick={() => setShowModal(true)}><i className="gi gi-user" /></span>
                                     <span onClick={ handleLogout }><i className="gi gi-exit" /></span>
                                 </div>
                             </div>
@@ -107,14 +113,17 @@ const SellerLayout = ({ children }) => {
 
                         <ul className="nav navbar-nav-custom pull-right">
                             <li className="dropdown">
-                                <a className="dropdown-toggle" data-toggle="dropdown">
+                                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                <a className="dropdown-toggle" onClick={() => setShowDropdown(!showDropdown)}>
                                     <img src={ AvatarImg } alt="avatar" />
                                     <i className="fa fa-angle-down" />
                                 </a>
-                                <ul className="dropdown-menu dropdown-custom dropdown-menu-right">
-                                    <li className="dropdown-header text-center">Account</li>
-                                    <li>
-                                        <span onClick={() => setShowModal(true)}>
+                                {
+                                    showDropdown &&
+                                    <ul className="dropdown-menu dropdown-custom dropdown-menu-right d-block">
+                                      <li className="dropdown-header text-center">Account</li>
+                                      <li>
+                                        <span onClick={() => handleProfileClick()}>
                                             <i className="fa fa-user fa-fw pull-right" />
                                             Profile
                                         </span>
@@ -122,8 +131,9 @@ const SellerLayout = ({ children }) => {
                                             <i className="fa fa-ban fa-fw pull-right" />
                                             Logout
                                         </span>
-                                    </li>
-                                </ul>
+                                      </li>
+                                    </ul>
+                                }
                             </li>
                         </ul>
                     </header>

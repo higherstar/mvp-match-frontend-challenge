@@ -1,22 +1,80 @@
 // Dependencies
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
+
+// Apis
+import { ProductApi } from "../../../apis";
 
 // Images
 import HeaderImg from "../../../assets/img/placeholders/headers/dashboard_header.jpg";
 
-// Constants
-const products = [
-    {
-        id: 1,
-        productName: "headset",
-        cost: 23,
-        availableAmount: 4,
-    }
-];
-
 // Create products page
 const Products = () => {
+    // States
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [productId, setProductId] = useState<number>(0);
+    const [deleteProductName, setDeleteProductName] = useState<string>();
+    const [products, setProducts] = useState([]);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [limit, setLimit] = useState(10);
+    const [search, setSearch] = useState<string>();
+    const [page, setPage] = useState<number>(1);
+    const [sortOrder, setSortOrder] = useState({
+        productName: "ASC",
+        cost: "ASC",
+        amountAvailable: "ASC",
+    });
+    const [sortBy, setSortBy] = useState<"productName" | "cost" | "amountAvailable">("productName");
+
+    // Delete click handler
+    const handleDeleteClick = (id: number, name: string) => {
+        setProductId(id);
+        setDeleteProductName(name);
+        setShowModal(true);
+    };
+
+    // Delete handler
+    const handleDelete = () => {
+        ProductApi.delete(productId)
+            .then(res => console.log(res))
+            .catch(err => console.log(err));
+        setShowModal(false);
+    };
+
+    // Sort handler
+    const handleSort = (sortByName: "productName" | "cost" | "amountAvailable") => {
+        setSortOrder({
+            ...sortOrder,
+            [sortByName]: sortOrder[sortByName] === "ASC" ? "DESC" : "ASC"
+        });
+        setSortBy(sortByName);
+    };
+
+    // Limit handler
+    const handleLimit = (limitValue) => {
+        setPage(1);
+        setLimit(+limitValue);
+    };
+
+    // Search handler
+    const handleSearch = (searchValue) => {
+        setPage(1);
+        setSearch(searchValue);
+    };
+
+    useEffect(() => {
+        const order = sortOrder[sortBy] as "ASC" | "DESC";
+
+        ProductApi.readAll({ search, limit, page, sortBy, order })
+            .then(res => {
+                console.log(res);
+                setProducts(res.listData);
+                setTotalPages(res.pagination.totalPages);
+            })
+            .catch(err => console.log(err));
+    }, [ search, limit, page, sortBy, sortOrder]);
+
+    // Return product page
     return (
         <>
             <div className="content-header content-header-media">
@@ -27,8 +85,7 @@ const Products = () => {
                         </div>
                     </div>
                 </div>
-                <img src={ HeaderImg } alt="header-image"
-                     className="animation-pulseSlow" />
+                <img src={ HeaderImg } alt="header" className="animation-pulseSlow" />
             </div>
             <div className="block full">
                 <div className="block-title">
@@ -37,60 +94,108 @@ const Products = () => {
                     </div>
                     <h2><i className="gi gi-shopping_cart mr-2" /> <strong>Products</strong></h2>
                 </div>
-                <div className="input-group push">
-                        <span className="input-group-btn">
-                            <button type="button" className="btn btn-primary"><i className="fa fa-search mr-3" />Search</button>
-                        </span>
-                    <input type="text" id="example-input1-group2" name="example-input1-group2" className="form-control" placeholder="Please enter product name..." />
+                <div className="row">
+                    <div className="col-sm-4 col-xs-9">
+                        <div className="input-group">
+                                            <span className="input-group-btn">
+                                                <button type="button" className="btn btn-primary"><i className="fa fa-search mr-3" /></button>
+                                            </span>
+                            <input type="text" name="example-input1-group2" className="form-control" placeholder="Please enter product name..." onInput={e => handleSearch(e.currentTarget.value)} />
+                        </div>
+                    </div>
+                    <div className="col-sm-8 col-xs-3">
+                        <label className="pull-right">
+                            <select name="example-datatable_length" className="form-control" onChange={e => handleLimit(e.currentTarget.value)}>
+                                <option value={ 10 }>10</option>
+                                <option value={ 20 }>20</option>
+                                <option value={ 30 }>30</option>
+                            </select>
+                        </label>
+                    </div>
                 </div>
-                <table id="ecom-products" className="table table-bordered table-striped table-vcenter">
+                <table id="ecom-products" className="table table-bordered table-striped table-vcenter mt-4">
                     <thead>
                     <tr>
                         <th className="text-center" style={{ width: 70 }}>No</th>
-                        <th>Product Name</th>
-                        <th className="text-right hidden-xs">Price</th>
-                        <th className="hidden-xs">Status</th>
+                        <th className="cursor" onClick={() => handleSort("productName")}>Product Name <i className={`hi hi-sort-by-alphabet${ sortOrder.productName === "DESC" ? "" : "-alt" }`} /></th>
+                        <th className="hidden-xs cursor" onClick={() => handleSort("cost")}>Price <i className={`hi hi-sort-by-order${ sortOrder.cost === "DESC" ? "" : "-alt" }`} /></th>
+                        <th className="hidden-xs cursor" onClick={() => handleSort("amountAvailable")}>Status <i className={`hi hi-sort-by-order${ sortOrder.amountAvailable === "DESC" ? "" : "-alt" }`} /></th>
                         <th className="text-center">Action</th>
                     </tr>
                     </thead>
                     <tbody>
                     {
-                        products.map(({ id, productName, cost, availableAmount }, index) => (
-                            <tr>
-                                <td className="text-center">{ index + 1 }</td>
-                                <td>{ productName }</td>
-                                <td className="text-right hidden-xs"><strong>$ { cost }</strong></td>
-                                <td className="hidden-xs">
-                                        <span className={`label ${ availableAmount ? "label-success" : "label-danger" } `}>
-                                            {
-                                                availableAmount ? `Available(${ availableAmount })` : "Out of stock"
-                                            }
-                                        </span>
-                                </td>
-                                <td className="text-center">
-                                    <div className="btn-group btn-group-xs">
-                                        <Link to={ `/products/edit/${ id }` } data-toggle="tooltip" title="Edit"
-                                              className="btn btn-default"><i className="fa fa-pencil"></i></Link>
-                                        <a href="javascript:void(0)" data-toggle="tooltip" title="Delete"
-                                           className="btn btn-xs btn-danger"><i className="fa fa-times"></i></a>
-                                    </div>
-                                </td>
-                            </tr>
-                        ))
+                        products.length > 0
+                            ? products.map(({ id, productName, cost, amountAvailable }, index) => (
+                                <tr>
+                                    <td className="text-center">{ (page - 1) * limit + index + 1 }</td>
+                                    <td>{ productName }</td>
+                                    <td className="hidden-xs"><strong>$ { cost }</strong></td>
+                                    <td className="hidden-xs">
+                                                    <span className={`label ${ amountAvailable ? "label-success" : "label-danger" } `}>
+                                                        {
+                                                            amountAvailable ? `Available(${ amountAvailable })` : "Out of stock"
+                                                        }
+                                                    </span>
+                                    </td>
+                                    <td className="text-center">
+                                        <div className="btn-group btn-group-xs">
+                                            <Link to={ `/products/edit/${ id }` } data-toggle="tooltip" title="Edit" className="btn btn-default"><i className="fa fa-pencil" /></Link>
+                                            <span className="btn btn-xs btn-danger" onClick={() => handleDeleteClick(id, productName)}><i className="fa fa-times" /></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                            : (
+                                <tr>
+                                    <td colSpan={ 5 }>
+                                        <div className="text-center">
+                                            <h4>There is no data to display</h4>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )
                     }
                     </tbody>
                 </table>
                 <div className="text-right">
-                    <ul className="pagination pagination-sm">
-                        <li><a href="javascript:void(0)"><i className="fa fa-angle-left"></i></a></li>
-                        <li className="active"><a href="javascript:void(0)">1</a></li>
-                        <li><a href="javascript:void(0)">2</a></li>
-                        <li><a href="javascript:void(0)">3</a></li>
-                        <li><a href="javascript:void(0)">4</a></li>
-                        <li><a href="javascript:void(0)"><i className="fa fa-angle-right"></i></a></li>
-                    </ul>
+                    {
+                        totalPages > 1 &&
+                        <ul className="pagination pagination-sm">
+                          <li className={ page === 1 ? "disabled" : "" } onClick={() => setPage(page - 1)}><span><i className="fa fa-angle-left" /></span></li>
+                            {
+                                new Array(totalPages).fill(1).map((_, index) => (
+                                    <li className={ page === (index + 1) ? "active" : "" } onClick={() => setPage(index + 1)}>
+                                        <span>{ index + 1 }</span>
+                                    </li>
+                                ))
+                            }
+                          <li className={ page === totalPages ? "disabled" : "" } onClick={() => setPage(page + 1)}><span><i className="fa fa-angle-right" /></span></li>
+                        </ul>
+                    }
                 </div>
             </div>
+            {
+                showModal &&
+                <div id="modal-regular" className="modal fade in d-block" style={{ background: "rgba(0, 0, 0, 0.3)" }}>
+                  <div className="modal-dialog">
+                    <div className="modal-content">
+                      <div className="modal-body">
+                        <div>
+                          <button type="button" className="close" onClick={() => setShowModal(false)}>&times;</button>
+                        </div>
+                        <h4>
+                          Are you sure to delete { deleteProductName }?
+                        </h4>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-sm btn-default" onClick={() => setShowModal(false)}>No</button>
+                        <button type="button" className="btn btn-sm btn-primary" onClick={() => handleDelete()}>Yes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            }
         </>
     );
 };

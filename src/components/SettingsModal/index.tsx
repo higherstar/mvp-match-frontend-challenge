@@ -58,7 +58,7 @@ const SettingsModal = ({ open, setOpen }: ISettingsModalProps) => {
                   <div className="modal-dialog">
                     <div className="modal-content">
                       <div className="modal-header text-center">
-                        <h2 className="modal-title"><i className="fa fa-pencil mr-3" /> Settings</h2>
+                        <h2 className="modal-title"><i className="fa fa-user mr-3" /> <strong>Profile</strong></h2>
                       </div>
 
                       <div className="modal-body">

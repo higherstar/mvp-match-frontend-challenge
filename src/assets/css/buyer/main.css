@@ -801,6 +801,18 @@ ul.ul-breath li {
     font-weight: 600;
 }
 
+.table thead > tr > th.cursor {
+    cursor: pointer;
+}
+
+.table thead > tr > th > i {
+    visibility: hidden;
+}
+
+.table thead > tr > th:hover > i {
+    visibility: visible;
+}
+
 .table thead > tr > th > small {
     font-weight: 400;
     font-size: 75%;
