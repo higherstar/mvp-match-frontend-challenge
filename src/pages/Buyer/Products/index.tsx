@@ -20,7 +20,7 @@ const Products = () => {
     const [page, setPage] = useState<number>(1);
     const [totalPages, setTotalPages] = useState<number>(1);
     const [products, setProducts] = useState([]);
-    const [search, setSearch] = useState<string>();
+    const [search, setSearch] = useState<string>("");
     const [sortOrder, setSortOrder] = useState<{ sortBy: string, order: "ASC" | "DESC" }>({ sortBy: "productName", order: "ASC" });
 
     // Get search from url
@@ -91,7 +91,7 @@ const Products = () => {
                                 <div className="row">
                                     <div className="col-xs-12">
                                         <div className="input-group">
-                                            <input type="text" className="form-control" placeholder="Search Store.." value={ search } onInput={e => handleSearch(e.currentTarget.value)} />
+                                            <input type="text" className="form-control" placeholder="Search Store.." value={ search } onChange={e => handleSearch(e.currentTarget.value)} />
                                             <div className="input-group-btn">
                                                 <button type="submit" className="btn btn-primary"><i className="fa fa-search" /></button>
                                             </div>
@@ -128,8 +128,8 @@ const Products = () => {
                                     <option value="75">75</option>
                                     <option value="100">100</option>
                                 </select>
-                                <select className="form-control" onChange={e => handleSort(JSON.parse(e.currentTarget.value))}>
-                                    <option value="0" disabled selected>SORT BY</option>
+                                <select className="form-control" defaultValue={ 0 } onChange={e => handleSort(JSON.parse(e.currentTarget.value))}>
+                                    <option value="0" disabled>SORT BY</option>
                                     <option value={JSON.stringify({ sortBy: "productName", order: "ASC" })}>Name (A to Z)</option>
                                     <option value={JSON.stringify({ sortBy: "productName", order: "DESC" })}>Name (Z to A)</option>
                                     <option value={JSON.stringify({ sortBy: "cost", order: "ASC" })}>Price (Lowest to Highest)</option>

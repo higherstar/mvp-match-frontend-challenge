@@ -127,7 +127,7 @@ const Products = () => {
                     {
                         products.length > 0
                             ? products.map(({ id, productName, cost, amountAvailable }, index) => (
-                                <tr>
+                                <tr key={ index }>
                                     <td className="text-center">{ (page - 1) * limit + index + 1 }</td>
                                     <td>{ productName }</td>
                                     <td className="hidden-xs"><strong>$ { cost }</strong></td>
@@ -165,7 +165,7 @@ const Products = () => {
                           <li className={ page === 1 ? "disabled" : "" } onClick={() => setPage(page - 1)}><span><i className="fa fa-angle-left" /></span></li>
                             {
                                 new Array(totalPages).fill(1).map((_, index) => (
-                                    <li className={ page === (index + 1) ? "active" : "" } onClick={() => setPage(index + 1)}>
+                                    <li key={ index } className={ page === (index + 1) ? "active" : "" } onClick={() => setPage(index + 1)}>
                                         <span>{ index + 1 }</span>
                                     </li>
                                 ))

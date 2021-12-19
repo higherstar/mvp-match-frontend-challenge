@@ -95,7 +95,7 @@ const ProductEdit = () => {
                                             <div className="col-md-9">
                                                 <div className="input-group">
                                                     <div className="input-group-addon"><i className="gi gi-cargo" /></div>
-                                                    <input type="text" name="product-name" className="form-control" placeholder="Enter product name.." value={ values.productName } onInput={e => setFieldValue("productName", e.currentTarget.value)} />
+                                                    <input type="text" name="product-name" className="form-control" placeholder="Enter product name.." value={ values.productName } onChange={e => setFieldValue("productName", e.currentTarget.value)} />
                                                 </div>
                                                 {
                                                     touched.productName && errors.productName &&
@@ -110,7 +110,7 @@ const ProductEdit = () => {
                                             <div className="col-md-9">
                                                 <div className="input-group">
                                                     <div className="input-group-addon"><i className="fa fa-usd" /></div>
-                                                    <input type="number" name="cost" className="form-control" placeholder="0,00" min={ 0 } value={ values.cost } onInput={e => setFieldValue("cost", e.currentTarget.value)} />
+                                                    <input type="number" name="cost" className="form-control" placeholder="0,00" min={ 0 } value={ values.cost } onChange={e => setFieldValue("cost", e.currentTarget.value)} />
                                                 </div>
                                                 {
                                                     touched.cost && errors.cost &&
@@ -125,7 +125,7 @@ const ProductEdit = () => {
                                             <div className="col-md-9">
                                                 <div className="input-group">
                                                     <div className="input-group-addon"><i className="gi gi-font" /></div>
-                                                    <input type="number" name="amountAvailable" className="form-control" placeholder="0" min={ 0 } value={ values.amountAvailable } onInput={e => setFieldValue("amountAvailable", e.currentTarget.value)} />
+                                                    <input type="number" name="amountAvailable" className="form-control" placeholder="0" min={ 0 } value={ values.amountAvailable } onChange={e => setFieldValue("amountAvailable", e.currentTarget.value)} />
                                                 </div>
                                                 {
                                                     touched.amountAvailable && errors.amountAvailable &&

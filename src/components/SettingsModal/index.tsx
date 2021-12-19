@@ -90,7 +90,7 @@ const SettingsModal = ({ open, setOpen }: ISettingsModalProps) => {
                                             <div className={`form-group ${ touched.email && errors.email ? "has-error" : null }`}>
                                                 <label className="col-md-4 control-label" htmlFor="email">Email</label>
                                                 <div className="col-md-8">
-                                                    <input type="email" id="email" name="email" className="form-control" placeholder="Please enter email..." value={ values.email } onInput={e => setFieldValue("email", e.currentTarget.value)} />
+                                                    <input type="email" id="email" name="email" className="form-control" placeholder="Please enter email..." value={ values.email } onChange={e => setFieldValue("email", e.currentTarget.value)} />
                                                     {
                                                         touched.email && errors.email &&
                                                         <div className="help-block animation-slideDown">
@@ -105,7 +105,7 @@ const SettingsModal = ({ open, setOpen }: ISettingsModalProps) => {
                                             <div className={`form-group ${ touched.password && errors.password ? "has-error" : null }`}>
                                                 <label className="col-md-4 control-label" htmlFor="password">New Password</label>
                                                 <div className="col-md-8">
-                                                    <input type="password" id="password" name="password" className="form-control" placeholder="Please choose a complex one.." value={ values.password } onInput={e => setFieldValue("password", e.currentTarget.value)} />
+                                                    <input type="password" id="password" name="password" className="form-control" placeholder="Please choose a complex one.." value={ values.password } onChange={e => setFieldValue("password", e.currentTarget.value)} />
                                                     {
                                                         touched.password && errors.password &&
                                                         <div className="help-block animation-slideDown">
@@ -117,7 +117,7 @@ const SettingsModal = ({ open, setOpen }: ISettingsModalProps) => {
                                             <div className={`form-group ${ touched.confirmPassword && errors.confirmPassword ? "has-error" : null }`}>
                                                 <label className="col-md-4 control-label" htmlFor="confirmPassword">Confirm New Password</label>
                                                 <div className="col-md-8">
-                                                    <input type="password" id="confirmPassword" name="confirmPassword" className="form-control" placeholder="..and confirm it!" value={ values.confirmPassword } onInput={e => setFieldValue("confirmPassword", e.currentTarget.value)} />
+                                                    <input type="password" id="confirmPassword" name="confirmPassword" className="form-control" placeholder="..and confirm it!" value={ values.confirmPassword } onChange={e => setFieldValue("confirmPassword", e.currentTarget.value)} />
                                                     {
                                                         touched.confirmPassword && errors.confirmPassword &&
                                                         <div className="help-block animation-slideDown">

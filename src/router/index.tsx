@@ -1,7 +1,7 @@
 // Dependencies
 import React from "react";
 import { shallowEqual, useSelector } from "react-redux";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 // Layouts
 import { AuthLayout, BuyerLayout, SellerLayout } from "../layouts";
@@ -11,7 +11,6 @@ import {authRoutes, buyerRoutes, commonRoutes, sellerRoutes} from "./routes";
 
 // Interfaces
 import { IState, IUser } from "../interfaces";
-import {NotFoundPage} from "../pages";
 
 // Child routes
 const childRoutes = (Layout, routes) =>

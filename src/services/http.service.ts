@@ -1,5 +1,5 @@
 // Dependencies
-import axios, { AxiosRequestConfig, Method, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, Method } from "axios";
 
 // Storage
 import { Storage } from "./storage.service";

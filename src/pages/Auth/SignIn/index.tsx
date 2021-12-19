@@ -101,7 +101,7 @@ const SignIn = () => {
                                         <span className="input-group-addon">
                                             <i className="gi gi-envelope"/>
                                         </span>
-                                        <input type="text" name="email" className="form-control input-lg" placeholder="Email" value={ values.email } onInput={e => setFieldValue("email", e.currentTarget.value)} />
+                                        <input type="text" name="email" className="form-control input-lg" placeholder="Email" value={ values.email } onChange={e => setFieldValue("email", e.currentTarget.value)} />
                                     </div>
                                     {
                                         touched.email && errors.email &&
@@ -117,7 +117,7 @@ const SignIn = () => {
                                         <span className="input-group-addon">
                                             <i className="gi gi-asterisk"/>
                                         </span>
-                                        <input type="password" name="password" className="form-control input-lg" placeholder="Password" value={ values.password } onInput={e => setFieldValue("password", e.currentTarget.value)} />
+                                        <input type="password" name="password" className="form-control input-lg" placeholder="Password" value={ values.password } onChange={e => setFieldValue("password", e.currentTarget.value)} />
                                     </div>
                                     {
                                         touched.password && errors.password &&
