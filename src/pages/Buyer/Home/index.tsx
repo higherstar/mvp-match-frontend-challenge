@@ -1,54 +1,71 @@
 // Dependencies
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
+
+// Apis
+import { ProductApi } from "../../../apis";
+
+// Interfaces
+import { IQueryParams, IState } from "../../../interfaces";
+
+// Actions
+import { addCart } from "../../../store/actions";
 
 // Images
 import StoreHomeImg from "../../../assets/img/placeholders/headers/store_home.jpg";
 
-// Constants
-const newArrivals = [
-    {
-        id: 1,
-        productName: "Sport Shoes",
-        cost: 79,
-    },
-    {
-        id: 2,
-        productName: "Jacket",
-        cost: 99,
-    },
-    {
-        id: 3,
-        productName: "Watch",
-        cost: 299
-    }
-];
-
-const bestSellers = [
-    {
-        id: 1,
-        productName: "Sunglasses",
-        cost: 109,
-    },
-    {
-        id: 2,
-        productName: "Gloves",
-        cost: 59,
-    },
-    {
-        id: 3,
-        productName: "Jacket",
-        cost: 99,
-    },
-    {
-        id: 4,
-        productName: "Headset",
-        cost: 79,
-    }
-];
-
 // Create home page
 const Home = () => {
+    // States
+    const [search, setSearch] = useState<string>();
+    const [newArrivals, setNewArrivals] = useState([]);
+
+    // Get history from hook
+    const history = useHistory();
+
+    // Get dispatch form hook
+    const dispatch = useDispatch();
+
+    // Get cart from store
+    const cart = useSelector((state: IState) => state.cart);
+
+    // input handler
+    const handleInput = (inputValue) => {
+        setSearch(inputValue);
+    };
+
+    // Key up handler
+    const handleKeyUp = (key) => {
+        if (key === "Enter") {
+            history.push(`/products?${ search }`);
+        }
+    };
+
+    // Add to cart handler
+    const handleCart = (product) => {
+        if (!(cart.filter(p => p.id === product.id).length > 0)) {
+            dispatch(addCart([...cart, { ...product, quantity: 1 }]));
+        }
+    };
+
+    useEffect(() => {
+        const query = {
+            limit: 5,
+            sortBy: "createdAt",
+            order: "DESC"
+        } as IQueryParams;
+
+        ProductApi.readAll(query)
+            .then(res => {
+                console.log(res);
+                setNewArrivals(res.listData);
+            })
+            .catch(err => console.log(err));
+    }, []);
+
+    // Return home page
     return (
         <>
             <div className="media-container">
@@ -64,52 +81,27 @@ const Home = () => {
             <section className="site-content site-section">
                 <div className="container">
                     <div className="site-block">
-                        <form action="ecom_search_results.html" method="post">
-                            <div className="input-group input-group-lg">
-                                <input type="text" id="ecom-search" name="ecom-search"
-                                       className="form-control text-center" placeholder="Search Store.." />
-                                <div className="input-group-btn">
-                                    <button type="submit" className="btn btn-primary"><i
-                                        className="fa fa-search" /></button>
-                                </div>
+                        <div className="input-group input-group-lg">
+                            <input type="text" className="form-control text-center" placeholder="Search Store.." onKeyUp={e => handleKeyUp(e.key)} onInput={e => handleInput(e.currentTarget.value)} />
+                            <div className="input-group-btn">
+                                <button type="submit" className="btn btn-primary" onClick={() => history.push(`/products?${ search }`)}><i className="fa fa-search" /></button>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <h2 className="site-heading"><strong>New</strong> Arrivals</h2>
                     <hr />
                     <div className="row store-items">
                         {
-                            newArrivals.map(({id, productName, cost}) => (
+                            newArrivals.map(({id, productName, amountAvailable, cost}) => (
                                 <div key={ id } className="col-md-4" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                                     <div className="store-item">
                                         <div className="store-item-info clearfix">
                                             <span className="store-item-price themed-color-dark pull-right">$ { cost }</span>
                                             <Link to={`/products/${ id }`}><strong>{ productName }</strong></Link><br />
                                             <small>
-                                                <i className="fa fa-shopping-cart text-muted" /> <a href="javascript:void(0)" className="text-muted">Add to cart</a>
+                                                <i className="fa fa-shopping-cart text-muted" /> <span className="text-muted add-cart" onClick={() => handleCart({ id, productName, cost, amountAvailable })}>Add to cart</span>
                                             </small>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        }
-                        <div className="col-md-12 text-right">
-                            <Link to="/products"><strong>View All</strong> <i className="fa fa-arrow-right" /></Link>
-                        </div>
-                    </div>
-
-                    <h2 className="site-heading"><strong>Best</strong> Sellers</h2>
-                    <hr />
-                    <div className="row store-items">
-                        {
-                            bestSellers.map(({id, productName, cost}) => (
-                                <div key={ id } className="col-md-4" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
-                                    <div className="store-item">
-                                        <div className="store-item-info clearfix">
-                                            <span className="store-item-price themed-color-dark pull-right">$ { cost }</span>
-                                            <Link to={`/products/${ id }`}><strong>{ productName }</strong></Link><br />
-                                            <small><i className="fa fa-shopping-cart text-muted" /> <a href="javascript:void(0)" className="text-muted">Add to cart</a></small>
                                         </div>
                                     </div>
                                 </div>

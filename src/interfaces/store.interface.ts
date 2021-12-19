@@ -8,8 +8,17 @@ export interface IUser {
     email: string;
 }
 
+export interface IProductInCart {
+    id?: number;
+    productName: string;
+    cost: number;
+    amountAvailable: number;
+    quantity: number;
+}
+
 export interface IState {
     showMenu: boolean;
     showNav: boolean;
     user: IUser;
+    cart: IProductInCart[];
 }

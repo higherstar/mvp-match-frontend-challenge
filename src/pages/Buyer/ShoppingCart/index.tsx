@@ -1,31 +1,61 @@
 // Dependencies
 import React from "react";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
-// Constants
-const products = [
-    {
-        id: 1,
-        productName: "Super Laptop 11",
-        amount: 1,
-        cost: 799,
-    },
-    {
-        id: 2,
-        productName: "White Headset",
-        amount: 2,
-        cost: 59,
-    },
-    {
-        id: 3,
-        productName: "Bluetooth",
-        amount: 1,
-        cost: 23,
-    }
-];
+// Interfaces
+import { IState } from "../../../interfaces";
+
+// Actions
+import { addCart } from "../../../store/actions";
+
+// Apis
+import { BusinessApi } from "../../../apis";
 
 // Create shopping cart page
 const ShoppingCart = () => {
+    // Get product in cart from store
+    const products = useSelector((state: IState) => state.cart);
+
+    // Get dispatch from hook
+    const dispatch = useDispatch();
+
+    // Plus handler
+    const handlePlus = (productId, index: number) => {
+        const currentProduct = products.filter(p => p.id === productId)[0];
+
+        if (currentProduct.amountAvailable > currentProduct.quantity) {
+            currentProduct.quantity = currentProduct.quantity + 1;
+
+            products[index] = currentProduct;
+            dispatch(addCart([...products]));
+        }
+    };
+
+    // Minus handler
+    const handleMinus = (productId, index: number) => {
+        const currentProduct = products.filter(p => p.id === productId)[0];
+
+        if (currentProduct.quantity > 1) {
+            currentProduct.quantity = currentProduct.quantity - 1;
+
+            products[index] = currentProduct;
+            dispatch(addCart([...products]));
+        }
+    };
+
+    // Purchase handler
+    const handlePurchase = () => {
+        console.log(products);
+        BusinessApi.purchase(products)
+            .then(res => {
+                console.log(res);
+                dispatch(addCart([]));
+            })
+            .catch(err => console.log(err));
+    };
+
+    // Return shopping cart page
     return (
         <>
             <section className="site-section site-section-light site-section-top themed-background-dark">
@@ -47,22 +77,28 @@ const ShoppingCart = () => {
                             </thead>
                             <tbody>
                             {
-                                products.map(({id, productName, amount, cost}) => (
-                                    <tr key={ id }>
-                                        <td>
-                                            <strong className="text-success">{ productName }</strong>
-                                        </td>
-                                        <td className="text-center">
-                                            <strong>1</strong>
-                                            <button className="btn btn-xs btn-success" data-toggle="tooltip"
-                                                    title="Add"><i className="fa fa-plus" /></button>
-                                            <button className="btn btn-xs btn-danger" data-toggle="tooltip"
-                                                    title="Remove"><i className="fa fa-minus" /></button>
-                                        </td>
-                                        <td className="text-right">$ { cost }</td>
-                                        <td className="text-right"><strong>$ { cost * amount }</strong></td>
-                                    </tr>
-                                ))
+                                products.length > 0
+                                    ? products.map(({id, productName, cost, quantity}, index) => (
+                                        <tr key={ id }>
+                                            <td>
+                                                <strong className="text-success">{ productName }</strong>
+                                            </td>
+                                            <td className="text-center">
+                                                <strong>{ quantity }</strong>
+                                                <button className="btn btn-xs btn-success" onClick={() => handlePlus(id, index) }><i className="fa fa-plus" /></button>
+                                                <button className="btn btn-xs btn-danger" onClick={() => handleMinus(id, index) }><i className="fa fa-minus" /></button>
+                                            </td>
+                                            <td className="text-right">$ { cost }</td>
+                                            <td className="text-right"><strong>$ { cost * quantity }</strong></td>
+                                        </tr>
+                                    ))
+                                    : (
+                                        <tr>
+                                            <td colSpan={ 4 }>
+                                                <h5 className="text-center"><strong>There is no product in the cart. Please add product to the cart</strong></h5>
+                                            </td>
+                                        </tr>
+                                    )
                             }
                             </tbody>
                         </table>
@@ -72,7 +108,7 @@ const ShoppingCart = () => {
                             <Link to="/products" className="btn btn-block btn-primary">Continue Shopping</Link>
                         </div>
                         <div className="col-xs-5 col-md-3 col-md-offset-6">
-                            <button className="btn btn-block btn-danger">Purchase</button>
+                            <button className="btn btn-block btn-danger" disabled={ products.length <= 0 } onClick={ handlePurchase }>Purchase</button>
                         </div>
                     </div>
                 </div>

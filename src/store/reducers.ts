@@ -9,11 +9,12 @@ const initialState: IState = {
     showMenu: true,
     showNav: false,
     user: {
+        email: "",
         role: "buyer",
         deposit: 0,
         token: false,
-        email: ""
-    }
+    },
+    cart: []
 };
 
 // Create reducer
@@ -36,6 +37,12 @@ const reducer = (state = initialState, actions) => {
             return {
                 ...state,
                 user: actions.payload
+            };
+
+        case types.ADD_CART:
+            return {
+                ...state,
+                cart: actions.payload
             };
 
         default:

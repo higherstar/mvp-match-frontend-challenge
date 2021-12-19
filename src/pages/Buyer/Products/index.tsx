@@ -1,68 +1,81 @@
 // Dependencies
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 
-// Constants
-const products = [
-    {
-        id: 1,
-        productName: "Sunglasses",
-        cost: 109,
-    },
-    {
-        id: 2,
-        productName: "Gloves",
-        cost: 59,
-    },
-    {
-        id: 3,
-        productName: "Jacket",
-        cost: 99,
-    },
-    {
-        id: 4,
-        productName: "Headset",
-        cost: 79,
-    },
-    {
-        id: 5,
-        productName: "Laptop",
-        cost: 1599,
-    },
-    {
-        id: 6,
-        productName: "Sunglasses",
-        cost: 149
-    },
-    {
-        id: 7,
-        productName: "Laptop",
-        cost: 1293
-    },
-    {
-        id: 8,
-        productName: "Gloves",
-        cost: 59,
-    },
-    {
-        id: 9,
-        productName: "Jacket",
-        cost: 99,
-    },
-    {
-        id: 10,
-        productName: "Headset",
-        cost: 79,
-    },
-    {
-        id: 11,
-        productName: "Laptop",
-        cost: 1599,
-    },
-];
+// Apis
+import { ProductApi } from "../../../apis";
+
+// Interfaces
+import { IState } from "../../../interfaces";
+
+// Actions
+import { addCart } from "../../../store/actions";
 
 // Create products page
 const Products = () => {
+    // States
+    const [limit, setLimit] = useState<number>(25);
+    const [page, setPage] = useState<number>(1);
+    const [totalPages, setTotalPages] = useState<number>(1);
+    const [products, setProducts] = useState([]);
+    const [search, setSearch] = useState<string>();
+    const [sortOrder, setSortOrder] = useState<{ sortBy: string, order: "ASC" | "DESC" }>({ sortBy: "productName", order: "ASC" });
+
+    // Get search from url
+    const { search: searchKey } = useLocation();
+
+    // Get dispatch from hook
+    const dispatch = useDispatch();
+
+    // Get cart from store
+    const cart = useSelector((state: IState) => state.cart);
+
+    // Limit handler
+    const handleLimit = (limitValue: number) => {
+        setPage(1);
+        setLimit(limitValue);
+    };
+
+    // Search handler
+    const handleSearch = (searchVale: string) => {
+        setPage(1);
+        setSearch(searchVale);
+    };
+
+    // Sort handler
+    const handleSort = (sortValue) => {
+        setSortOrder({
+            sortBy: sortValue.sortBy,
+            order: sortValue.order
+        });
+    };
+
+    // Add to cart handler
+    const handleCart = (product) => {
+        if (!(cart.filter(p => p.id === product.id).length > 0)) {
+            dispatch(addCart([...cart, { ...product, quantity: 1 }]));
+        }
+    };
+
+    useEffect(() => {
+        const { sortBy, order } = sortOrder;
+
+        ProductApi.readAll({ search, limit, page, sortBy, order })
+            .then(res => {
+                console.log(res);
+                setProducts(res.listData);
+                setTotalPages(res.pagination.totalPages);
+            })
+            .catch(err => console.log(err));
+    }, [ search, limit, page, sortOrder ]);
+
+    useEffect(() => {
+        setSearch(searchKey.slice(1));
+    }, [searchKey]);
+
+    // Return products page
     return (
         <>
             <section className="site-section site-section-light site-section-top themed-background-dark">
@@ -78,7 +91,7 @@ const Products = () => {
                                 <div className="row">
                                     <div className="col-xs-12">
                                         <div className="input-group">
-                                            <input type="text" id="ecom-search" name="ecom-search" className="form-control" placeholder="Search Store.." value="" />
+                                            <input type="text" className="form-control" placeholder="Search Store.." value={ search } onInput={e => handleSearch(e.currentTarget.value)} />
                                             <div className="input-group-btn">
                                                 <button type="submit" className="btn btn-primary"><i className="fa fa-search" /></button>
                                             </div>
@@ -88,50 +101,78 @@ const Products = () => {
                             </div>
                             <aside className="sidebar site-block">
                                 <div className="sidebar-block">
-                                    <div className="row d-flex align-items-center">
-                                        <div className="col-xs-6 push-bit">
-                                            <span className="h3">$ 750<br /><small><em>3 Items</em></small></span>
-                                        </div>
-                                        <div className="col-xs-6">
-                                            <Link to="/shopping-cart" className="btn btn-sm btn-block btn-success">VIEW CART</Link>
-                                        </div>
-                                    </div>
+                                    {
+                                        cart.length > 0
+                                            ? (
+                                                <div className="row d-flex align-items-center">
+                                                    <div className="col-xs-6 push-bit">
+                                                        <span className="h3">$ { cart.reduce((totalPrice, p) => totalPrice + p.quantity * p.cost, 0) }<br /><small><em>{ cart.length } Item{ cart.length > 1 ? "s" : null }</em></small></span>
+                                                    </div>
+                                                    <div className="col-xs-6">
+                                                        <Link to="/shopping-cart" className="btn btn-sm btn-block btn-success">VIEW CART</Link>
+                                                    </div>
+                                                </div>
+                                            )
+                                            : (
+                                                <h5 className="text-center"><strong>Please add product in the cart.</strong></h5>
+                                            )
+                                    }
                                 </div>
                             </aside>
                         </div>
                         <div className="col-md-8 col-lg-9">
                             <div className="form-inline push-bit clearfix">
-                                <select id="results-show" name="results-show" className="form-control pull-right">
-                                    <option value="0" disabled selected>SHOW</option>
+                                <select className="form-control pull-right" onChange={e => handleLimit(+e.currentTarget.value)}>
                                     <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="75">75</option>
                                     <option value="100">100</option>
                                 </select>
-                                <select id="results-sort" name="results-sort" className="form-control">
+                                <select className="form-control" onChange={e => handleSort(JSON.parse(e.currentTarget.value))}>
                                     <option value="0" disabled selected>SORT BY</option>
-                                    <option value="1">Popularity</option>
-                                    <option value="2">Name (A to Z)</option>
-                                    <option value="3">Name (Z to A)</option>
-                                    <option value="4">Price (Lowest to Highest)</option>
-                                    <option value="5">Price (Highest to Lowest)</option>
-                                    <option value="6">Sales (Lowest to Highest)</option>
-                                    <option value="7">Sales (Highest to Lowest)</option>
+                                    <option value={JSON.stringify({ sortBy: "productName", order: "ASC" })}>Name (A to Z)</option>
+                                    <option value={JSON.stringify({ sortBy: "productName", order: "DESC" })}>Name (Z to A)</option>
+                                    <option value={JSON.stringify({ sortBy: "cost", order: "ASC" })}>Price (Lowest to Highest)</option>
+                                    <option value={JSON.stringify({ sortBy: "cost", order: "DESC" })}>Price (Highest to Lowest)</option>
+                                    <option value={JSON.stringify({ sortBy: "amountAvailable", order: "ASC" })}>Sales (Lowest to Highest)</option>
+                                    <option value={JSON.stringify({ sortBy: "amountAvailable", order: "DESC" })}>Sales (Highest to Lowest)</option>
                                 </select>
                             </div>
                             <div className="row store-items">
                                 {
-                                    products.map(({id, productName, cost}) => (
-                                        <div key={ id } className="col-md-6" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
-                                            <div className="store-item">
-                                                <div className="store-item-info clearfix">
-                                                    <span className="store-item-price themed-color-dark pull-right">$ { cost }</span>
-                                                    <Link to={`/products/${ id }`}><strong>{ productName }</strong></Link><br />
-                                                    <small><i className="fa fa-shopping-cart text-muted" /> <a href="javascript:void(0)" className="text-muted">Add to cart</a></small>
+                                    products.length > 0
+                                        ? products.map(({id, productName, amountAvailable, cost}) => (
+                                            <div key={ id } className="col-md-6" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
+                                                <div className="store-item">
+                                                    <div className="store-item-info clearfix">
+                                                        <span className="store-item-price themed-color-dark pull-right">$ { cost }</span>
+                                                        <Link to={`/products/${ id }`}><strong>{ productName }</strong></Link><br />
+                                                        <small><i className="fa fa-shopping-cart text-muted" /> <span className="text-muted add-cart" onClick={() => handleCart({ id, productName, cost, amountAvailable })}>Add to cart</span></small>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))
+                                        ))
+                                        : (
+                                            <div className="text-center">
+                                                <h4>There is no data to display</h4>
+                                            </div>
+                                        )
+                                }
+                            </div>
+                            <div className="text-right">
+                                {
+                                    totalPages > 1 &&
+                                    <ul className="pagination">
+                                      <li className={ page === 1 ? "disabled" : "" } onClick={() => setPage(page - 1)}><span><i className="fa fa-angle-left" /></span></li>
+                                        {
+                                            new Array(totalPages).fill(1).map((_, index) => (
+                                                <li className={ page === (index + 1) ? "active" : "" } onClick={() => setPage(index + 1)}>
+                                                    <span>{ index + 1 }</span>
+                                                </li>
+                                            ))
+                                        }
+                                      <li className={ page === totalPages ? "disabled" : "" } onClick={() => setPage(page + 1)}><span><i className="fa fa-angle-right" /></span></li>
+                                    </ul>
                                 }
                             </div>
                         </div>

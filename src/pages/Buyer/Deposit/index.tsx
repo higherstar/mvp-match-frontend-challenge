@@ -53,8 +53,8 @@ const Deposit = () => {
                         <div className="col-xs-12 col-sm-10 col-md-8">
                             <h3>Current deposit: { currentValue }</h3>
                             <div className="input-group input-group-lg push">
-                                <select className="form-control" onChange={e => setValue(+e.currentTarget.value)}>
-                                    <option value={ 0 }>Please enter deposit...</option>
+                                <select className="form-control" defaultValue={ 0 } onChange={e => setValue(+e.currentTarget.value)}>
+                                    <option value={ 0 } disabled>Please enter deposit...</option>
                                     <option value={ 5 }>  5  </option>
                                     <option value={ 10 }> 10 </option>
                                     <option value={ 20 }> 20 </option>

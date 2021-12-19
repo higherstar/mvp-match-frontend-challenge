@@ -394,6 +394,14 @@ a.store-item:hover {
     transform: translateY(-2px);
 }
 
+.store-item .add-cart {
+    cursor: pointer;
+}
+
+.store-item .add-cart:hover {
+    text-decoration: underline;
+}
+
 .store-item-rating {
     position: absolute;
     top: 0;

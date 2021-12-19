@@ -21,3 +21,9 @@ export const setUser = (payload: IUser) => ({
     type: types.SET_USER,
     payload
 });
+
+// Export add cart action
+export const addCart = (payload) => ({
+   type: types.ADD_CART,
+   payload
+});
